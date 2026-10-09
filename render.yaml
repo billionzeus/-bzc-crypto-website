@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: bzc-platform
+    runtime: node
+    plan: free # Testing only; choose a paid always-on plan for production use.
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: APP_ORIGIN
+        value: AUTO_RENDER_ORIGIN
+      - key: TRUST_PROXY
+        value: "true"
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_BOOTSTRAP_TOKEN
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bzc-postgres
+          property: connectionString
+
+databases:
+  - name: bzc-postgres
+    databaseName: bzc_platform
+    user: bzc_app
+    plan: free # Testing only; use a persistent paid database for real users/funds.
